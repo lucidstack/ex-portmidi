@@ -3,7 +3,7 @@ defmodule PortMidi.Mixfile do
 
   def project do
     [app: :portmidi,
-     version: "0.0.1",
+     version: "0.0.2",
      elixir: "~> 1.2",
      compilers: [:port_midi, :elixir, :app],
      build_embedded: Mix.env == :prod,
