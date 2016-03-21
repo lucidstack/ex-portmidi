@@ -16,8 +16,7 @@ defmodule PortMidi.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [applications: [:logger],
-     mod: {PortMidi, []},
-     env: [device: "Midi Device"]]
+     mod: {PortMidi, []}]
   end
 
   # Dependencies can be Hex packages:

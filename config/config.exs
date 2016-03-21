@@ -8,18 +8,7 @@ use Mix.Config
 # if you want to provide default values for your application for
 # 3rd-party users, it should be done in your "mix.exs" file.
 
-# You can configure for your application as:
-#
-#     config :portmidi, key: :value
-#
-# And access this configuration in your application as:
-#
-#     Application.get_env(:portmidi, :key)
-#
-# Or configure a 3rd-party app:
-#
-#     config :logger, level: :info
-#
+config :portmidi, device: "Midi Device"
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment
