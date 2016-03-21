@@ -1,4 +1,4 @@
-defmodule PortmidiTest do
+defmodule PortMidiTest do
   use ExUnit.Case
   doctest PortMidi
 

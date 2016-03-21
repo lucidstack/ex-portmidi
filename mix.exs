@@ -2,7 +2,7 @@ defmodule PortMidi.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :port_midi,
+    [app: :portmidi,
      version: "0.0.1",
      elixir: "~> 1.2",
      compilers: [:port_midi, :elixir, :app],
@@ -16,7 +16,8 @@ defmodule PortMidi.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [applications: [:logger],
-     mod: {PortMidi, []}]
+     mod: {PortMidi, []},
+     env: [device: "Midi Device"]]
   end
 
   # Dependencies can be Hex packages:

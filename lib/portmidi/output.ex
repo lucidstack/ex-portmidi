@@ -25,7 +25,7 @@ defmodule PortMidi.Output do
   def open_port(device_name) do
     Port.open({
       :spawn_executable,
-      :filename.join(:code.priv_dir(:portmidi), 'port_midi_out')
+      :filename.join(:code.priv_dir(:portmidi), 'portmidi_out')
     }, [
       packet: 2,
       args: [device_name]
