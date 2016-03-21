@@ -1,6 +1,8 @@
 # ex-portmidi
 
-**TODO: Add description**
+ex-portmidi is a simple wrapper for the [PortMidi C library](http://portmedia.sourceforge.net/portmidi/),
+written in Elixir. This implementation uses ports for the moment. I might give
+it a shot, and port everything to NIFs, if possible.
 
 ## Installation
 
@@ -18,3 +20,6 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
           [applications: [:portmidi]]
         end
 
+  3. Configure the name of your device in your `config.exs`:
+
+        config :portmidi, device: "Launchpad Mini"
