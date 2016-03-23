@@ -1,37 +1,26 @@
 #include <portmidi.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
 typedef unsigned char byte;
+typedef enum {INPUT, OUTPUT} DeviceType;
 
 int read_cmd(byte *buff);
 int write_cmd(byte *buff, int len);
+PmError findDevice(PmStream *stream, char *deviceName, DeviceType type);
+const PmDeviceInfo ** listDevices(int);
 
-PmError findDevice(PmStream * stream, char * deviceName) {
-  PmError result = pmInvalidDeviceId;
-  const PmDeviceInfo * deviceInfo;
-
-  int i = 0;
-  while((deviceInfo = Pm_GetDeviceInfo(i)) != NULL) {
-    int nameCompare = strcmp(deviceInfo->name, deviceName);
-    if(nameCompare == 0 && deviceInfo->output == 1) {
-      result = Pm_OpenOutput(stream, i, NULL, 0, NULL, NULL, 0);
-      break;
-    }
-
-    i++;
-  }
-
-  return result;
-}
-
-int main(int argc, char ** argv) {
-  int command, feedbackCode;
+int main(int _argc, char ** argv) {
+  const PmDeviceInfo ** list;
+  int feedbackCode;
 
   Pm_Initialize();
 
   PortMidiStream * stream;
-  PmError deviceFound = findDevice(&stream, argv[1]);
+  if(findDevice(&stream, "Launchpad Mini", OUTPUT) != pmNoError) {
+    exit(1);
+  }
 
   byte buff[8];
   PmEvent event;
@@ -40,7 +29,8 @@ int main(int argc, char ** argv) {
     event.timestamp = 0;
 
     PmError error = Pm_Write(stream, &event, 1);
-    if (Pm_Write(stream, &event, 1) == pmNoError) {
+
+    if (error == pmNoError) {
       feedbackCode = 0;
     } else {
       feedbackCode = 1;
