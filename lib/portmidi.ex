@@ -5,6 +5,7 @@ defmodule PortMidi do
     import Supervisor.Spec, warn: false
 
     children = [
+      worker(PortMidi.Listeners, []),
       worker(PortMidi.Input,  [Application.get_env(:portmidi, :device)]),
       worker(PortMidi.Output, [Application.get_env(:portmidi, :device)]),
     ]
