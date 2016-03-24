@@ -13,6 +13,7 @@ PmError findDevice(PmStream *stream, char *deviceName, DeviceType type) {
   PmError result = pmInvalidDeviceId;
   const PmDeviceInfo *deviceInfo;
 
+
   int i = 0;
   while((deviceInfo = Pm_GetDeviceInfo(i)) != NULL) {
     int nameCompare = strcmp(deviceInfo->name, deviceName);
@@ -35,11 +36,9 @@ PmError findDevice(PmStream *stream, char *deviceName, DeviceType type) {
 }
 
 const PmDeviceInfo ** listDevices(int numOfDevices) {
+  int i = 0;
   static const PmDeviceInfo * devices[MAXBUFLEN];
 
-  for(int i = 0; i < numOfDevices; i++) {
-    devices[i] = Pm_GetDeviceInfo(i);
-  }
-
+  for(i = 0; i < numOfDevices; i++) { devices[i] = Pm_GetDeviceInfo(i); }
   return devices;
 }

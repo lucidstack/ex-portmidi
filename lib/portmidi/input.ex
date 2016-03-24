@@ -1,31 +1,70 @@
 defmodule PortMidi.Input do
+  @on_load {:init, 0}
+  def init do
+    :ok = :portmidi
+    |> :code.priv_dir
+    |> :filename.join("portmidi_in")
+    |> :erlang.load_nif(0)
+  end
+
+  # Client implementation
+  #######################
+
   def start_link(device_name) do
-    Task.async(fn -> start_input(device_name) end)
+    :ok = device_name |> open
     {:ok, self}
   end
 
-  def start_input(device_name) do
-    Process.flag(:trap_exit, true)
-    device_name |> open_port |> listen
+  def open(device_name), do:
+    device_name
+    |> String.to_char_list
+    |> do_open
+
+  def listen, do:
+    {:ok, Task.async(&do_listen/0).pid}
+
+  def do_listen do
+    if poll == :read do
+      read |> send_to_listeners
+    end
+
+    unless terminated?, do: do_listen
   end
 
-  def listen(port) do
+  def send_to_listeners(data) do
+    PortMidi.Listeners.list
+    |> Enum.each( &(send(&1, data)) )
+  end
+
+  def stop(task), do:
+    send(task, :stop)
+
+  def terminated? do
     receive do
-      {^port, {:data, values}} ->
-        IO.inspect(values)
-        listen(port)
-      _ ->
-        listen(port)
+      :stop -> true
+    after
+      0 -> false
     end
   end
 
-  def open_port(device_name) do
-    Port.open({
-      :spawn_executable,
-      :filename.join(:code.priv_dir(:portmidi), 'portmidi_in')
-    }, [
-      packet: 2,
-      args: [device_name]
-    ])
-  end
+  def poll, do:
+    do_poll
+
+  def read, do:
+    do_read
+
+  # NIFs implementation
+  #####################
+
+  def do_poll, do:
+    raise "NIF library not loaded"
+
+  def do_read, do:
+    raise "NIF library not loaded"
+
+  def do_open(_device_name), do:
+    raise "NIF library not loaded"
+
+  def do_listen(_stream), do:
+    raise "NIF library not loaded"
 end

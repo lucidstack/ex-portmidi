@@ -1,37 +1,62 @@
+#define MAXBUFLEN 1024
+#include "erl_nif.h"
 #include <portmidi.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef unsigned char byte;
 typedef enum {INPUT, OUTPUT} DeviceType;
+static PortMidiStream * stream;
 
-int read_cmd(byte *buff);
-int write_cmd(byte *buff, int len);
 PmError findDevice(PmStream *stream, char *deviceName, DeviceType type);
+void debug(char*);
 
-int main(int _argc, char ** argv) {
+int load(ErlNifEnv* env, void** priv_data, ERL_NIF_TERM load_info) {
+  return 0;
+}
+
+static ERL_NIF_TERM do_open(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]) {
+  char deviceName[MAXBUFLEN];
+  PmError result;
+
   Pm_Initialize();
 
-  PortMidiStream * stream;
-  if(findDevice(&stream, argv[1], INPUT) != pmNoError) {
-    exit(1);
+  enif_get_string(env, argv[0], deviceName, MAXBUFLEN, ERL_NIF_LATIN1);
+  if((result = findDevice(&stream, "Launchpad Mini", INPUT)) != pmNoError) {
+    return enif_make_badarg(env);
   }
 
-  byte buff[3];
-  PmEvent buffer[16];
+  return enif_make_atom(env, "ok");
+}
 
-  while (stream) {
-    if(Pm_Poll(stream)) {
-      int numEvents = Pm_Read(stream, buffer, 16);
-
-      for(int i = 0; i < numEvents; i++) {
-        buff[0] = Pm_MessageStatus(buffer[i].message);
-        buff[1] = Pm_MessageData1(buffer[i].message);
-        buff[2] = Pm_MessageData2(buffer[i].message);
-
-        write_cmd(buff, 3);
-      }
-    }
+static ERL_NIF_TERM do_poll(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]) {
+  if(Pm_Poll(stream)) {
+    return enif_make_atom(env, "read");
+  } else {
+    return enif_make_atom(env, "retry");
   }
 }
+
+static ERL_NIF_TERM do_read(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) {
+  PmEvent buffer[MAXBUFLEN];
+  int status, data1, data2;
+  int numEvents = Pm_Read(stream, buffer, 1);
+
+  status = enif_make_int(env, Pm_MessageStatus(buffer[0].message));
+  data1  = enif_make_int(env, Pm_MessageData1(buffer[0].message));
+  data2  = enif_make_int(env, Pm_MessageData2(buffer[0].message));
+
+  return enif_make_list3(env, status, data1, data2);
+}
+
+void debug(char* str) {
+  fprintf(stderr, str);
+}
+
+static ErlNifFunc nif_funcs[] = {
+  {"do_open", 1, do_open},
+  {"do_poll", 0, do_poll},
+  {"do_read", 0, do_read}
+};
+
+ERL_NIF_INIT(Elixir.PortMidi.Input,nif_funcs,load,NULL,NULL,NULL)
