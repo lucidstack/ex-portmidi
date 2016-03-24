@@ -10,7 +10,7 @@ typedef unsigned char byte;
 
 const PmDeviceInfo ** listDevices(int);
 
-static ERL_NIF_TERM do_list_devices(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) {
+static ERL_NIF_TERM do_list(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) {
   ERL_NIF_TERM erlDevices[MAXBUFLEN];
   int i = 0;
   int numOfDevices = Pm_CountDevices();
@@ -30,7 +30,7 @@ static ERL_NIF_TERM do_list_devices(ErlNifEnv* env, int arc, const ERL_NIF_TERM 
 }
 
 static ErlNifFunc nif_funcs[] = {
-  {"do_list_devices", 0, do_list_devices}
+  {"do_list", 0, do_list}
 };
 
 ERL_NIF_INIT(Elixir.PortMidi.Devices,nif_funcs,NULL,NULL,NULL,NULL)

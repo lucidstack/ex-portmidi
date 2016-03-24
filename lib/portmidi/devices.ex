@@ -7,9 +7,9 @@ defmodule PortMidi.Devices do
     |> :erlang.load_nif(0)
   end
 
-  def list_devices, do:
-    do_list_devices
+  def list, do:
+    do_list
 
-  def do_list_devices, do:
+  def do_list, do:
     raise "NIF library not loaded"
 end
