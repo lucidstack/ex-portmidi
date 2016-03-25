@@ -49,10 +49,6 @@ static ERL_NIF_TERM do_read(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) 
   return enif_make_list3(env, status, data1, data2);
 }
 
-void debug(char* str) {
-  fprintf(stderr, str);
-}
-
 static ErlNifFunc nif_funcs[] = {
   {"do_open", 1, do_open},
   {"do_poll", 0, do_poll},
