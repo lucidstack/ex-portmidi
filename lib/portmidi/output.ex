@@ -1,34 +1,46 @@
 defmodule PortMidi.Output do
-  use GenServer
+  @default_timestamp 0
+  @on_load {:init, 0}
+  def init do
+    :ok = :portmidi
+    |> :code.priv_dir
+    |> :filename.join("portmidi_out")
+    |> :erlang.load_nif(0)
+  end
+
+  def start_link(device_name) do
+    GenServer.start_link(__MODULE__, device_name, name: __MODULE__)
+  end
 
   # Client implementation
   #######################
 
-  def start_link(device_name) do
-    GenServer.start_link(__MODULE__, device_name, name: Output)
-  end
+  def message(message, _) when length(message) != 3, do:
+    raise "message must be [status, note, velocity]"
 
-  def message(message) do
-    GenServer.cast(Output, {:send, message})
-  end
+  def message(message, timestamp \\ @default_timestamp), do:
+    GenServer.call(__MODULE__, {:message, message, timestamp})
 
   # Server implementation
   #######################
 
-  def init(device_name), do: {:ok, open_port(device_name)}
-
-  def handle_cast({:send, message}, port) do
-    Port.command(port, [1 | message])
-    {:noreply, port}
+  def init(device_name) do
+    device_name
+    |> String.to_char_list
+    |> do_open
   end
 
-  def open_port(device_name) do
-    Port.open({
-      :spawn_executable,
-      :filename.join(:code.priv_dir(:portmidi), 'portmidi_out')
-    }, [
-      packet: 2,
-      args: [device_name]
-    ])
+  def handle_call({:message, message, timestamp}, from, stream) do
+    response = do_message(stream, message, timestamp)
+    {:reply, response, stream}
   end
+
+  # NIFs implementation
+  #####################
+
+  def do_open(_device_name), do:
+    raise "NIF library not loaded"
+
+  def do_message(_stream, _message, _timestamp), do:
+    raise "NIF library not loaded"
 end
