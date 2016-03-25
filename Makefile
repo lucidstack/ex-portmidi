@@ -11,13 +11,13 @@ ifneq ($(OS),Windows_NT)
 	endif
 endif
 
-all: priv/portmidi_in.so priv/portmidi_out priv/portmidi_list.so
+all: priv/portmidi_in.so priv/portmidi_out.so priv/portmidi_list.so
 
 priv/portmidi_in.so: src/portmidi_in.c src/portmidi_shared.c
 	$(CC) $(CFLAGS) -shared $(LDFLAGS) -o $@ -lportmidi src/portmidi_in.c src/portmidi_shared.c
 
-priv/portmidi_out: src/portmidi_out.c src/portmidi_shared.c
-	gcc -o priv/portmidi_out src/portmidi_out.c src/erl_comm.c src/portmidi_shared.c -lportmidi
+priv/portmidi_out.so: src/portmidi_out.c src/portmidi_shared.c
+	$(CC) $(CFLAGS) -shared $(LDFLAGS) -o $@ -lportmidi src/portmidi_out.c src/portmidi_shared.c
 
 priv/portmidi_list.so: src/portmidi_list.c src/portmidi_shared.c
 	$(CC) $(CFLAGS) -shared $(LDFLAGS) -o $@ -lportmidi src/portmidi_list.c src/portmidi_shared.c
