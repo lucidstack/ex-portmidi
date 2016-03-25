@@ -6,13 +6,13 @@
 #define MAXBUFLEN 1024
 
 typedef enum {INPUT, OUTPUT} DeviceType;
-PmError findDevice(PmStream *stream, char *deviceName, DeviceType type);
+PmError findDevice(PortMidiStream **stream, char *deviceName, DeviceType type);
 const PmDeviceInfo ** listDevices(int);
+void debug(char *str);
 
-PmError findDevice(PmStream *stream, char *deviceName, DeviceType type) {
+PmError findDevice(PortMidiStream **stream, char *deviceName, DeviceType type) {
   PmError result = pmInvalidDeviceId;
   const PmDeviceInfo *deviceInfo;
-
 
   int i = 0;
   while((deviceInfo = Pm_GetDeviceInfo(i)) != NULL) {
@@ -41,4 +41,8 @@ const PmDeviceInfo ** listDevices(int numOfDevices) {
 
   for(i = 0; i < numOfDevices; i++) { devices[i] = Pm_GetDeviceInfo(i); }
   return devices;
+}
+
+void debug(char* str) {
+  fprintf(stderr, str);
 }
