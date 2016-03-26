@@ -19,14 +19,15 @@ defmodule PortMidi.Input.Server do
   #######################
 
   def init(device_name) do
-    {:ok, reader} = PortMidi.Input.Reader.start_link(self, device_name)
+    {:ok, reader} = Reader.start_link(self, device_name)
     Reader.listen(reader)
 
     {:ok, reader}
   end
 
   def handle_cast({:new_message, message}, reader) do
-    Listeners.list(self)
+    self
+    |> Listeners.list
     |> Enum.each(&(send(&1, message)))
 
     {:noreply, reader}
