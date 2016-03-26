@@ -2,22 +2,29 @@ defmodule PortMidiListenersTest do
   alias PortMidi.Listeners
   use ExUnit.Case, async: true
 
-  test "creates an empty map of listeners" do
-    assert Listeners.list == []
+  setup do
+    {:ok, input} = Agent.start(fn -> nil end)
+    {:ok, input: input}
   end
 
-  test "adds pids when registering a process" do
-    Listeners.register(self)
-    assert self in Listeners.list
+  test "creates an empty map of listeners", %{input: input} do
+    assert Listeners.list(input) == {:error, :input_not_found}
   end
 
-  test "removes listeners when down" do
-    {:ok, listener} = Agent.start(fn -> 0 end)
-    Listeners.register(listener)
+  test "adds pids when registering a process", %{input: input} do
+    {:ok, listener} = Agent.start(fn -> nil end)
 
-    assert listener in Listeners.list
+    Listeners.register(input, listener)
+    assert listener in Listeners.list(input)
+  end
+
+  test "removes listeners when down", %{input: input} do
+    {:ok, listener} = Agent.start(fn -> nil end)
+    Listeners.register(input, listener)
+
+    assert listener in Listeners.list(input)
 
     Agent.stop(listener)
-    refute listener in Listeners.list
+    refute listener in Listeners.list(input)
   end
 end
