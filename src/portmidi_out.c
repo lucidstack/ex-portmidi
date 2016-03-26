@@ -43,7 +43,7 @@ static ERL_NIF_TERM do_open(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
   );
 }
 
-static ERL_NIF_TERM do_message(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+static ERL_NIF_TERM do_write(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
   static PortMidiStream ** stream;
   Pm_Initialize();
 
@@ -90,7 +90,7 @@ static ERL_NIF_TERM do_message(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv
 
 static ErlNifFunc nif_funcs[] = {
   {"do_open", 1, do_open},
-  {"do_message", 3, do_message}
+  {"do_write", 3, do_write}
 };
 
 ERL_NIF_INIT(Elixir.PortMidi.Output,nif_funcs,load,NULL,NULL,NULL)
