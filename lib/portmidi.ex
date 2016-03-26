@@ -23,7 +23,7 @@ defmodule PortMidi do
     Output.start_link device_name
 
   def listen(input, pid), do:
-    Input.listen(pid, input)
+    Input.listen(input, pid)
 
   def write(output, message), do:
     Output.write(output, message)
