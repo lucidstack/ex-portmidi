@@ -1,2 +1,4 @@
 %{"bunt": {:hex, :bunt, "0.1.5"},
-  "credo": {:hex, :credo, "0.3.10"}}
+  "credo": {:hex, :credo, "0.3.10"},
+  "meck": {:hex, :meck, "0.8.4"},
+  "mock": {:hex, :mock, "0.1.3"}}
