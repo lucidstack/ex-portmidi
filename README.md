@@ -19,12 +19,6 @@ def application do
 end
 ```
 
-3. If you are not planning on using more than one device, and you know the name of the device
-you are gonna use, configure a device name in your app's configuration files:
-```
-config :portmidi, device: "Launchpad Mini"
-```
-
 ## Usage
 
 To send MIDI events to a MIDI device:
