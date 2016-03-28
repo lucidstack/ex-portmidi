@@ -1,15 +1,13 @@
 defmodule PortMidi.Devices do
-  @on_load :init
-  def init do
-    :portmidi
-    |> :code.priv_dir
-    |> :filename.join("portmidi_list")
-    |> :erlang.load_nif(0)
+  import PortMidi.Nifs.Devices
+  alias  PortMidi.Device
+
+  def list do
+    do_list
+    |> Map.update(:input,  [], &do_build_devices/1)
+    |> Map.update(:output, [], &do_build_devices/1)
   end
 
-  def list, do:
-    do_list
-
-  def do_list, do:
-    raise "NIF library not loaded"
+  def do_build_devices(devices), do:
+    Enum.map(devices, &Device.build/1)
 end
