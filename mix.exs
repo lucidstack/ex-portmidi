@@ -3,7 +3,7 @@ defmodule PortMidi.Mixfile do
 
   def project do
     [app: :portmidi,
-     version: "3.1.1",
+     version: "3.1.2",
      elixir: "~> 1.2",
      description: "Elixir bindings to the portmidi C library",
      package: package,
@@ -34,7 +34,7 @@ defmodule PortMidi.Mixfile do
     [{:credo, "~> 0.3", only: [:dev, :test]},
      {:mock, "~> 0.1.1", only: :test},
      {:ex_doc, github: "elixir-lang/ex_doc", only: :dev},
-     {:earmark, ">= 0.0.0"}]
+     {:earmark, ">= 0.0.0", only: :dev}]
   end
 
   defp package do
