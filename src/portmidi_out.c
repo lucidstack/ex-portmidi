@@ -52,35 +52,34 @@ static ERL_NIF_TERM do_write(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]
     return enif_make_badarg(env);
   }
 
-  PmEvent event;
-  ERL_NIF_TERM data = argv[1];
-  ERL_NIF_TERM statusErl, noteErl, velocityErl;
+  int numOfErlValues;
+  ERL_NIF_TERM erlMessage = argv[1];
+  const ERL_NIF_TERM * erlValues;
+  enif_get_tuple(env, erlMessage, &numOfErlValues, &erlValues);
+
   long int status, note, velocity, timestamp = 0;
-  PmError writeError;
-  const char * writeErrorMsg;
-
-  enif_get_list_cell(env, data, &statusErl, &data);
-  enif_get_list_cell(env, data, &noteErl, &data);
-  enif_get_list_cell(env, data, &velocityErl, &data);
-
-  enif_get_long(env, statusErl, &status);
-  enif_get_long(env, noteErl, &note);
-  enif_get_long(env, velocityErl, &velocity);
+  enif_get_long(env, erlValues[0], &status);
+  enif_get_long(env, erlValues[1], &note);
+  enif_get_long(env, erlValues[2], &velocity);
 
   if(argv[2]) {
     enif_get_long(env, argv[2], &timestamp);
   }
 
+  PmEvent event;
   event.message = Pm_Message(status, note, velocity);
   event.timestamp = timestamp;
 
+  PmError writeError;
   writeError = Pm_Write(*stream, &event, 1);
 
   if (writeError == pmNoError) {
     return enif_make_atom(env, "ok");
   }
 
+  const char * writeErrorMsg;
   writeErrorMsg = Pm_GetErrorText(writeError);
+
   return enif_make_tuple2(
     env,
     enif_make_atom(env, "error"),
