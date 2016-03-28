@@ -93,4 +93,4 @@ static ErlNifFunc nif_funcs[] = {
   {"do_write", 3, do_write}
 };
 
-ERL_NIF_INIT(Elixir.PortMidi.Output,nif_funcs,load,NULL,NULL,NULL)
+ERL_NIF_INIT(Elixir.PortMidi.Nifs.Output,nif_funcs,load,NULL,NULL,NULL)

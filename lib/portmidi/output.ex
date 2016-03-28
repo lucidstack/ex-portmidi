@@ -1,5 +1,5 @@
 defmodule PortMidi.Output do
-  @default_timestamp 0
+  import PortMidi.Nifs.Output, only: [do_open: 1, do_write: 3]
 
   def start_link(device_name) do
     GenServer.start_link(__MODULE__, device_name)
@@ -8,6 +8,7 @@ defmodule PortMidi.Output do
   # Client implementation
   #######################
 
+  @default_timestamp 0
   def write(server, message, timestamp \\ @default_timestamp)
 
   def write(_, message, _) when length(message) != 3, do:
@@ -35,21 +36,4 @@ defmodule PortMidi.Output do
 
   def terminate(:normal, _state), do:
     :ok
-
-  # NIFs implementation
-  #####################
-  @on_load {:init_nif, 0}
-
-  def init_nif do
-    :ok = :portmidi
-    |> :code.priv_dir
-    |> :filename.join("portmidi_out")
-    |> :erlang.load_nif(0)
-  end
-
-  def do_open(_device_name), do:
-    raise "NIF library not loaded"
-
-  def do_write(_stream, _message, _timestamp), do:
-    raise "NIF library not loaded"
 end

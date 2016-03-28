@@ -86,4 +86,4 @@ static ErlNifFunc nif_funcs[] = {
   {"do_read", 1, do_read}
 };
 
-ERL_NIF_INIT(Elixir.PortMidi.Input.Reader,nif_funcs,load,NULL,NULL,NULL)
+ERL_NIF_INIT(Elixir.PortMidi.Nifs.Input,nif_funcs,load,NULL,NULL,NULL)
