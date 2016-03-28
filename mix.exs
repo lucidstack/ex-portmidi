@@ -32,7 +32,9 @@ defmodule PortMidi.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:credo, "~> 0.3", only: [:dev, :test]},
-     {:mock, "~> 0.1.1", only: :test}]
+     {:mock, "~> 0.1.1", only: :test},
+     {:ex_doc, github: "elixir-lang/ex_doc", only: :dev},
+     {:earmark, ">= 0.0.0"}]
   end
 
   defp package do

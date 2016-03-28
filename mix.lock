@@ -1,4 +1,6 @@
 %{"bunt": {:hex, :bunt, "0.1.5"},
   "credo": {:hex, :credo, "0.3.10"},
+  "earmark": {:hex, :earmark, "0.2.1"},
+  "ex_doc": {:git, "https://github.com/elixir-lang/ex_doc.git", "8da0eda6b40e1913bb299c8c634f0672036bbd33", []},
   "meck": {:hex, :meck, "0.8.4"},
   "mock": {:hex, :mock, "0.1.3"}}

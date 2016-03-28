@@ -8,7 +8,7 @@ that provides some nice abstractions to (write to|listen on) MIDI devices.
 1. Add portmidi to your list of dependencies in `mix.exs`:
 ```
 def deps do
-  [{:portmidi, "~> 1.0"}]
+  [{:portmidi, "~> 3.0"}]
 end
 ```
 
@@ -31,7 +31,7 @@ To send MIDI events to a MIDI device:
 ```
 iex(1)> {:ok, output} = PortMidi.open(:output, "Launchpad Mini")
 {:ok, #PID<0.172.0>}
-iex(2)> PortMidi.write(output, [176, 0, 127])
+iex(2)> PortMidi.write(output, {176, 0, 127})
 :ok
 iex(3)> PortMidi.close(:output, output)
 :ok
@@ -51,4 +51,13 @@ iex(4)> PortMidi.close(:input, input)
 :ok
 ```
 
-As simple as that.
+To list all connected devices:
+```
+ex(1)> PortMidi.devices
+%{input: [%PortMidi.Device{input: 1, interf: "CoreMIDI", name: "Launchpad Mini",
+    opened: 0, output: 0}],
+  output: [%PortMidi.Device{input: 0, interf: "CoreMIDI",
+    name: "Launchpad Mini", opened: 0, output: 1}]}
+```
+
+For more details, [check out the Hexdocs](https://hexdocs.pm/portmidi/3.0.0/PortMidi.html).
