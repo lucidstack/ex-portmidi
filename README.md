@@ -8,7 +8,7 @@ that provides some nice abstractions to (write to|listen on) MIDI devices.
 1. Add portmidi to your list of dependencies in `mix.exs`:
 ```
 def deps do
-  [{:portmidi, "~> 3.0"}]
+  [{:portmidi, "~> 3.1"}]
 end
 ```
 
