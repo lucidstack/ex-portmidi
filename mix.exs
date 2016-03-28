@@ -38,7 +38,7 @@ defmodule PortMidi.Mixfile do
   defp package do
     [maintainers: ["Andrea Rossi"],
      licenses: ["MIT"],
-     links: ["https://github.com/lucidstack/ex-portmidi"]]
+     links: %{"Github" => "https://github.com/lucidstack/ex-portmidi"}]
   end
 
 
