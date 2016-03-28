@@ -5,6 +5,8 @@ defmodule PortMidi.Mixfile do
     [app: :portmidi,
      version: "3.0.0",
      elixir: "~> 1.2",
+     description: "Elixir bindings to the portmidi C library",
+     package: package,
      compilers: [:port_midi, :elixir, :app],
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -32,6 +34,14 @@ defmodule PortMidi.Mixfile do
     [{:credo, "~> 0.3", only: [:dev, :test]},
      {:mock, "~> 0.1.1", only: :test}]
   end
+
+  defp package do
+    [maintainers: ["Andrea Rossi"],
+     licenses: ["MIT"],
+     links: ["https://github.com/lucidstack/ex-portmidi"]]
+  end
+
+
 end
 
 defmodule Mix.Tasks.Compile.PortMidi do
