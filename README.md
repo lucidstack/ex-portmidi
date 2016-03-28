@@ -54,4 +54,4 @@ ex(1)> PortMidi.devices
     name: "Launchpad Mini", opened: 0, output: 1}]}
 ```
 
-For more details, [check out the Hexdocs](https://hexdocs.pm/portmidi/3.0.0/PortMidi.html).
+For more details, [check out the Hexdocs](https://hexdocs.pm/portmidi/PortMidi.html).
