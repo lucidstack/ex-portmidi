@@ -22,7 +22,11 @@ defmodule PortMidi.Input.Reader do
     end
 
   def stop(agent) do
-    Agent.get agent, fn({_, _, task}) -> Task.shutdown(task) end
+    Agent.get agent, fn({_, stream, task}) ->
+      task   |> Task.shutdown
+      stream |> do_close
+    end
+
     Agent.stop(agent)
   end
 

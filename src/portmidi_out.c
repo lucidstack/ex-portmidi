@@ -87,9 +87,23 @@ static ERL_NIF_TERM do_write(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]
   );
 }
 
+static ERL_NIF_TERM do_close(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) {
+  static PortMidiStream ** stream;
+
+  ErlNifResourceType* streamType = (ErlNifResourceType*)enif_priv_data(env);
+  if(!enif_get_resource(env, argv[0], streamType, (PortMidiStream **) &stream)) {
+    return enif_make_badarg(env);
+  }
+
+  Pm_Close(*stream);
+
+  return enif_make_atom(env, "ok");
+}
+
 static ErlNifFunc nif_funcs[] = {
   {"do_open", 1, do_open},
-  {"do_write", 3, do_write}
+  {"do_write", 3, do_write},
+  {"do_close", 1, do_close}
 };
 
 ERL_NIF_INIT(Elixir.PortMidi.Nifs.Output,nif_funcs,load,NULL,NULL,NULL)

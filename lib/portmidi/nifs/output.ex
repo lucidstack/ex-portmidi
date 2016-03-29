@@ -1,7 +1,7 @@
 defmodule PortMidi.Nifs.Output do
-  @on_load {:init_nif, 0}
+  @on_load {:init, 0}
 
-  def init_nif do
+  def init do
     :ok = :portmidi
     |> :code.priv_dir
     |> :filename.join("portmidi_out")
@@ -12,5 +12,8 @@ defmodule PortMidi.Nifs.Output do
     raise "NIF library not loaded"
 
   def do_write(_stream, _message, _timestamp), do:
+    raise "NIF library not loaded"
+
+  def do_close(_stream), do:
     raise "NIF library not loaded"
 end

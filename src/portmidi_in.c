@@ -80,10 +80,24 @@ static ERL_NIF_TERM do_read(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) 
   return enif_make_list3(env, status, data1, data2);
 }
 
+static ERL_NIF_TERM do_close(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) {
+  static PortMidiStream ** stream;
+
+  ErlNifResourceType* streamType = (ErlNifResourceType*)enif_priv_data(env);
+  if(!enif_get_resource(env, argv[0], streamType, (PortMidiStream **) &stream)) {
+    return enif_make_badarg(env);
+  }
+
+  Pm_Close(*stream);
+
+  return enif_make_atom(env, "ok");
+}
+
 static ErlNifFunc nif_funcs[] = {
-  {"do_open", 1, do_open},
-  {"do_poll", 1, do_poll},
-  {"do_read", 1, do_read}
+  {"do_open",  1, do_open},
+  {"do_poll",  1, do_poll},
+  {"do_read",  1, do_read},
+  {"do_close", 1, do_close}
 };
 
 ERL_NIF_INIT(Elixir.PortMidi.Nifs.Input,nif_funcs,load,NULL,NULL,NULL)

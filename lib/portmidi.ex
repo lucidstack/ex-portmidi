@@ -39,10 +39,10 @@ defmodule PortMidi do
   def open(:output, device_name), do: Output.start_link device_name
 
   @doc """
-    Terminates the GenServer held by the `device` argument. If the type is an
-    input, and `listen/2` was called on it, it also shuts down the listening
-    process. Using the given `device` after calling this method will raise an
-    error.
+    Terminates the GenServer held by the `device` argument, and closes the
+    PortMidi stream. If the type is an input, and `listen/2` was called on it,
+    it also shuts down the listening process. Using the given `device` after
+    calling this method will raise an error.
   """
   def close(device_type, device)
   def close(:input, input),   do: Input.stop(input)

@@ -1,5 +1,5 @@
 defmodule PortMidi.Output do
-  import PortMidi.Nifs.Output, only: [do_open: 1, do_write: 3]
+  import PortMidi.Nifs.Output
 
   def start_link(device_name) do
     GenServer.start_link(__MODULE__, device_name)
@@ -24,6 +24,8 @@ defmodule PortMidi.Output do
   #######################
 
   def init(device_name) do
+    Process.flag(:trap_exit, true)
+
     device_name
     |> String.to_char_list
     |> do_open
@@ -34,6 +36,7 @@ defmodule PortMidi.Output do
     {:reply, response, stream}
   end
 
-  def terminate(:normal, _state), do:
-    :ok
+  def terminate(_reason, stream), do:
+    stream |> do_close
+
 end

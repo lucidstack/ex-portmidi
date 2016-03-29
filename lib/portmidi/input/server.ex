@@ -19,6 +19,8 @@ defmodule PortMidi.Input.Server do
   #######################
 
   def init(device_name) do
+    Process.flag(:trap_exit, true)
+
     {:ok, reader} = Reader.start_link(self, device_name)
     Reader.listen(reader)
 
@@ -33,6 +35,7 @@ defmodule PortMidi.Input.Server do
     {:noreply, reader}
   end
 
-  def terminate(:normal, reader), do:
+  def terminate(_reason, reader), do:
     reader |> Reader.stop
+
 end
