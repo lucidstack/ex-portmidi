@@ -3,7 +3,7 @@ defmodule PortMidi.Mixfile do
 
   def project do
     [app: :portmidi,
-     version: "3.1.2",
+     version: "3.2.0",
      elixir: "~> 1.2",
      description: "Elixir bindings to the portmidi C library",
      package: package,
