@@ -1,16 +1,23 @@
 defmodule PortMidi.Mixfile do
   use Mix.Project
+  @version "3.2.0"
 
   def project do
     [app: :portmidi,
-     version: "3.2.0",
+     version: @version,
      elixir: "~> 1.2",
      description: "Elixir bindings to the portmidi C library",
      package: package,
      compilers: [:port_midi, :elixir, :app],
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps]
+     deps: deps,
+
+     # Docs
+     name: "PortMidi",
+     docs: [source_ref: "v#{@version}", main: "PortMidi",
+            source_url: "https://github.com/lucidstack/ex-portmidi"]]
+   ]
   end
 
   # Configuration for the OTP application
