@@ -74,7 +74,7 @@ static ERL_NIF_TERM do_read(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) 
   data1  = enif_make_int(env, Pm_MessageData1(buffer[0].message));
   data2  = enif_make_int(env, Pm_MessageData2(buffer[0].message));
 
-  return enif_make_list3(env, status, data1, data2);
+  return enif_make_tuple3(env, status, data1, data2);
 }
 
 static ERL_NIF_TERM do_close(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) {

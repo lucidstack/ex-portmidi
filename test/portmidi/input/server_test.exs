@@ -11,7 +11,7 @@ defmodule PortMidiInputServerTest do
     Listeners.register(input, self)
 
     Agent.get input, fn(_) ->
-      handle_cast({:new_message, [176, 0, 127]}, nil)
+      handle_cast({:new_message, {176, 0, 127}}, nil)
     end
 
     assert_received {input, {176, 0, 127}}
