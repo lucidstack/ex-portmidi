@@ -46,7 +46,6 @@ static ERL_NIF_TERM do_open(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 
 static ERL_NIF_TERM do_poll(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]) {
   static PortMidiStream ** stream;
-  Pm_Initialize();
 
   ErlNifResourceType* streamType = (ErlNifResourceType*)enif_priv_data(env);
   if(!enif_get_resource(env, argv[0], streamType, (PortMidiStream **) &stream)) {
@@ -64,8 +63,6 @@ static ERL_NIF_TERM do_read(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) 
   PmEvent buffer[MAXBUFLEN];
   int status, data1, data2;
   static PortMidiStream ** stream;
-
-  Pm_Initialize();
 
   ErlNifResourceType* streamType = (ErlNifResourceType*)enif_priv_data(env);
   if(!enif_get_resource(env, argv[0], streamType, (PortMidiStream **) &stream)) {

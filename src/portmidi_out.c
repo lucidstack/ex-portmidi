@@ -45,7 +45,6 @@ static ERL_NIF_TERM do_open(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 
 static ERL_NIF_TERM do_write(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
   static PortMidiStream ** stream;
-  Pm_Initialize();
 
   ErlNifResourceType* streamType = (ErlNifResourceType*)enif_priv_data(env);
   if(!enif_get_resource(env, argv[0], streamType, (PortMidiStream **) &stream)) {
