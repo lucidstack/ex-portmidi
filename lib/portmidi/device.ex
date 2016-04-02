@@ -8,7 +8,7 @@ defmodule PortMidi.Device do
     |> make_struct
   end
 
-  def make_struct(map), do:
+  defp make_struct(map), do:
     struct(__MODULE__, map)
 end
 

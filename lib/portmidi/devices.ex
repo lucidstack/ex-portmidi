@@ -8,6 +8,6 @@ defmodule PortMidi.Devices do
     |> Map.update(:output, [], &do_build_devices/1)
   end
 
-  def do_build_devices(devices), do:
+  defp do_build_devices(devices), do:
     Enum.map(devices, &Device.build/1)
 end

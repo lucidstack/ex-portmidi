@@ -3,10 +3,7 @@ defmodule PortMidi.Input.Reader do
   alias PortMidi.Input.Server
 
   def start_link(server, device_name) do
-    Agent.start_link fn ->
-      {:ok, stream} = device_name |> open
-      {server, stream}
-    end
+    Agent.start_link fn -> do_start(server, device_name) end
   end
 
   # Client implementation
@@ -16,29 +13,36 @@ defmodule PortMidi.Input.Reader do
     device_name |> String.to_char_list |> do_open
 
   def listen(agent), do:
-    Agent.get_and_update agent, fn({server, stream}) ->
-      task = Task.async(fn -> do_listen(server, stream) end)
-      {:ok, {server, stream, task}}
-    end
+    Agent.get_and_update agent, &do_listen/1
 
   def stop(agent) do
-    Agent.get agent, fn({_, stream, task}) ->
-      task   |> Task.shutdown
-      stream |> do_close
-    end
-
+    Agent.get agent, &do_stop/1
     Agent.stop(agent)
   end
 
   # Agent implementation
   ######################
 
-  def do_listen(server, stream) do
+  defp do_start(server, device_name) do
+    {:ok, stream} = device_name |> open
+    {server, stream}
+  end
+
+  defp do_listen({server, stream}) do
+    task = Task.async fn -> do_loop(server, stream) end
+    {:ok, {server, stream, task}}
+  end
+
+  defp do_loop(server, stream) do
     if do_poll(stream) == :read do
       Server.new_message(server, stream |> do_read)
     end
 
-    do_listen(server, stream)
+    do_loop(server, stream)
+  end
+
+  defp do_stop({_server, stream, task}) do
+    task   |> Task.shutdown
+    stream |> do_close
   end
 end
-
