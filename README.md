@@ -5,7 +5,7 @@ that provides some nice abstractions to (write to|listen on) MIDI devices.
 
 ## Installation
 
-Add portmidi to your list of dependencies in `mix.exs`, and ensure 
+Add portmidi to your list of dependencies in `mix.exs`, and ensure
 that `portmidi` is started before your application:
 ```
 def deps do
@@ -40,7 +40,7 @@ ex(2)> PortMidi.listen(input, self)
 :ok
 
 iex(3)> receive do
-...(3)>   event -> IO.inspect(event)
+...(3)>   {^input, event} -> IO.inspect(event)
 ...(3)> end
 [144, 112, 127]
 
