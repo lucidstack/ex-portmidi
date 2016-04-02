@@ -1,5 +1,7 @@
 # ex-portmidi
 
+**Need to catch up?** Have a look at the [changelog](/CHANGELOG.md)! 🚀
+
 ex-portmidi is a wrapper for the [PortMidi C library](http://portmedia.sourceforge.net/portmidi/),
 that provides some nice abstractions to (write to|listen on) MIDI devices.
 
