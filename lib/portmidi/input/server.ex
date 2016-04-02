@@ -30,7 +30,7 @@ defmodule PortMidi.Input.Server do
   def handle_cast({:new_message, message}, reader) do
     self
     |> Listeners.list
-    |> Enum.each(&(send(&1, message)))
+    |> Enum.each(&(send(&1, {self, message})))
 
     {:noreply, reader}
   end

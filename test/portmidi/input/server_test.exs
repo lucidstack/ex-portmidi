@@ -14,7 +14,7 @@ defmodule PortMidiInputServerTest do
       handle_cast({:new_message, [176, 0, 127]}, nil)
     end
 
-    assert_received [176, 0, 127]
+    assert_received {input, {176, 0, 127}}
   end
 
   test "terminating the server calls close on the reader" do
