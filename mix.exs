@@ -16,7 +16,7 @@ defmodule PortMidi.Mixfile do
      # Docs
      name: "PortMidi",
      docs: [source_ref: "v#{@version}", main: "PortMidi",
-            source_url: "https://github.com/lucidstack/ex-portmidi"]]
+            source_url: "https://github.com/lucidstack/ex-portmidi"]
    ]
   end
 
