@@ -42,7 +42,7 @@ ex(2)> PortMidi.listen(input, self)
 iex(3)> receive do
 ...(3)>   {^input, event} -> IO.inspect(event)
 ...(3)> end
-[144, 112, 127]
+{144, 112, 127}
 
 iex(4)> PortMidi.close(:input, input)
 :ok
