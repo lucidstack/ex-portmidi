@@ -30,4 +30,14 @@ defmodule PortMidiInputServerTest do
       assert called Reader.stop(test_pid)
     end
   end
+
+  test "an error from Reader on open stops the server" do
+    reader_mock = [start_link: fn(_pid, _device_name) ->
+     {:error, :invalid_device_id}
+    end]
+
+    with_mock Reader, reader_mock  do
+      assert {:stop, :invalid_device_id} = init("Launchpad Mini")
+    end
+  end
 end
