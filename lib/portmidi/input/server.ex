@@ -21,10 +21,13 @@ defmodule PortMidi.Input.Server do
   def init(device_name) do
     Process.flag(:trap_exit, true)
 
-    {:ok, reader} = Reader.start_link(self, device_name)
-    Reader.listen(reader)
-
-    {:ok, reader}
+    case Reader.start_link(self, device_name) do
+      {:ok, reader} ->
+        Reader.listen(reader)
+        {:ok, reader}
+      {:error, reason} ->
+        {:stop, reason}
+    end
   end
 
   def handle_cast({:new_message, message}, reader) do

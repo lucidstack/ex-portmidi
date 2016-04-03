@@ -23,6 +23,7 @@ defmodule PortMidi.Input.Reader do
   defp do_start(server, device_name) do
     case device_name |> String.to_char_list |> do_open do
       {:ok,    stream} -> {server, stream}
+      {:error, reason} -> exit(reason)
     end
   end
 

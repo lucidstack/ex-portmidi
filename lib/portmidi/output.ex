@@ -26,9 +26,10 @@ defmodule PortMidi.Output do
   def init(device_name) do
     Process.flag(:trap_exit, true)
 
-    device_name
-    |> String.to_char_list
-    |> do_open
+    case device_name |> String.to_char_list |> do_open do
+      {:ok,    stream} -> {:ok,   stream}
+      {:error, reason} -> {:stop, reason}
+    end
   end
 
   def handle_call({:write, message, timestamp}, _from, stream) do

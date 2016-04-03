@@ -9,6 +9,7 @@
 typedef enum {INPUT, OUTPUT} DeviceType;
 
 PmError findDevice(PmStream **stream, char *deviceName, DeviceType type);
+char* makePmErrorAtom(PmError);
 const PmDeviceInfo ** listDevices(int);
 void debug(char *str);
 
@@ -30,17 +31,14 @@ static ERL_NIF_TERM do_open(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 
   enif_get_string(env, argv[0], deviceName, MAXBUFLEN, ERL_NIF_LATIN1);
   if((result = findDevice(streamAlloc, deviceName, OUTPUT)) != pmNoError) {
-    return enif_make_badarg(env);
+    ERL_NIF_TERM reason = enif_make_atom(env, makePmErrorAtom(result));
+    return enif_make_tuple2(env, enif_make_atom(env, "error"), reason);
   }
 
   streamTerm = enif_make_resource(env, streamAlloc);
   enif_keep_resource(streamAlloc);
 
-  return enif_make_tuple2(
-    env,
-    enif_make_atom(env, "ok"),
-    streamTerm
-  );
+  return enif_make_tuple2(env, enif_make_atom(env, "ok"), streamTerm);
 }
 
 static ERL_NIF_TERM do_write(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {

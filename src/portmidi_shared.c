@@ -6,6 +6,8 @@
 #define MAXBUFLEN 1024
 
 typedef enum {INPUT, OUTPUT} DeviceType;
+
+char* makePmErrorAtom(PmError errnum);
 PmError findDevice(PortMidiStream **stream, char *deviceName, DeviceType type);
 const PmDeviceInfo ** listDevices(int);
 void debug(char *str);
@@ -43,6 +45,46 @@ const PmDeviceInfo ** listDevices(int numOfDevices) {
   return devices;
 }
 
+char* makePmErrorAtom(PmError errnum) {
+  char*  atom;
+  switch(errnum) {
+    case pmNoError:
+      atom = "";
+      break;
+    case pmHostError:
+      atom = "host_error";
+      break;
+    case pmInvalidDeviceId:
+      atom = "invalid_device_id";
+      break;
+    case pmInsufficientMemory:
+      atom = "out_of_memory";
+      break;
+    case pmBufferTooSmall:
+      atom = "buffer_too_small";
+      break;
+    case pmBadPtr:
+      atom = "bad_pointer";
+      break;
+    case pmInternalError:
+      atom = "internal_portmidi_error";
+      break;
+    case pmBufferOverflow:
+      atom = "buffer_overflow";
+      break;
+    case pmBadData:
+      atom = "invalid_midi_message";
+      break;
+    case pmBufferMaxSize:
+      atom = "buffer_max_size";
+      break;
+    default:
+      atom = "illegal_error_number";
+      break;
+  }
+  return atom;
+}
+
 void debug(char* str) {
-  fprintf(stderr, str);
+  fprintf(stderr, "%s\n", str);
 }
