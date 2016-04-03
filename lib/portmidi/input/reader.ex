@@ -9,9 +9,6 @@ defmodule PortMidi.Input.Reader do
   # Client implementation
   #######################
 
-  def open(device_name), do:
-    device_name |> String.to_char_list |> do_open
-
   def listen(agent), do:
     Agent.get_and_update agent, &do_listen/1
 
@@ -24,8 +21,9 @@ defmodule PortMidi.Input.Reader do
   ######################
 
   defp do_start(server, device_name) do
-    {:ok, stream} = device_name |> open
-    {server, stream}
+    case device_name |> String.to_char_list |> do_open do
+      {:ok,    stream} -> {server, stream}
+    end
   end
 
   defp do_listen({server, stream}) do
