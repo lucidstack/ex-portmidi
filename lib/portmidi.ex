@@ -33,7 +33,11 @@ defmodule PortMidi do
 
     Returns the `pid` to the corresponding GenServer. Use this `pid` to call
     `listen/2`, if the device is an input, or `write/2` if it is an output.
+
+    If Portmidi can't open the device, a tuple `{:error, reason}` is returned.
+    Check `src/portmidi_shared.c#makePmErrorAtom` for all possible errors.
   """
+  @spec open(atom, <<>>) :: {:ok, pid()} | {:error, atom()}
   def open(device_type, device_name)
   def open(:input, device_name),  do: Input.start_link device_name
   def open(:output, device_name), do: Output.start_link device_name
@@ -44,6 +48,7 @@ defmodule PortMidi do
     it also shuts down the listening process. Using the given `device` after
     calling this method will raise an error.
   """
+  @spec close(atom, pid()) :: :ok
   def close(device_type, device)
   def close(:input, input),   do: Input.stop(input)
   def close(:output, output), do: Input.stop(output)
@@ -53,6 +58,7 @@ defmodule PortMidi do
     calling this method, the process with the given `pid` will receive MIDI
     events in its mailbox as soon as they are emitted from the device.
   """
+  @spec listen(pid(), pid()) :: :ok
   def listen(input, pid), do:
     Input.listen(input, pid)
 
@@ -60,6 +66,7 @@ defmodule PortMidi do
     Writes a MIDI event to the given `output` device. `message` must be a tuple
     `{status, note, velocity}`. Returns `:ok` on write.
   """
+  @spec write(pid(), {byte(), byte(), byte()}) :: :ok
   def write(output, message), do:
     Output.write(output, message)
 
@@ -68,6 +75,7 @@ defmodule PortMidi do
     `message` must be a tuple `{status, note, velocity}`. Returns `:ok` on
     write.
   """
+  @spec write(pid(), {byte(), byte(), byte()}, non_neg_integer()) :: :ok
   def write(output, message, timestamp), do:
     Output.write(output, message, timestamp)
 
@@ -75,5 +83,6 @@ defmodule PortMidi do
     Returns a map with input and output devices, in the form of
     `PortMidi.Device` structs
   """
+  @spec devices() :: %{input: [%PortMidi.Device{}, ...], output: [%PortMidi.Device{}, ...]}
   def devices, do: Devices.list
 end
