@@ -11,7 +11,7 @@ Add portmidi to your list of dependencies in `mix.exs`, and ensure
 that `portmidi` is started before your application:
 ```
 def deps do
-  [{:portmidi, "~> 4.0"}]
+  [{:portmidi, "~> 5.0"}]
 end
 
 def application do
