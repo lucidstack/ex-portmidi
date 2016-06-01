@@ -75,6 +75,8 @@ static ERL_NIF_TERM do_read(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) 
   status = enif_make_int(env, Pm_MessageStatus(buffer[0].message));
   data1  = enif_make_int(env, Pm_MessageData1(buffer[0].message));
   data2  = enif_make_int(env, Pm_MessageData2(buffer[0].message));
+  int bufferSize = enif_make_int(env, argv[2]);
+  int numEvents = Pm_Read(*stream, buffer, bufferSize);
 
   return enif_make_tuple3(env, status, data1, data2);
 }
@@ -95,7 +97,7 @@ static ERL_NIF_TERM do_close(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[])
 static ErlNifFunc nif_funcs[] = {
   {"do_open",  1, do_open},
   {"do_poll",  1, do_poll},
-  {"do_read",  1, do_read},
+  {"do_read",  2, do_read},
   {"do_close", 1, do_close}
 };
 

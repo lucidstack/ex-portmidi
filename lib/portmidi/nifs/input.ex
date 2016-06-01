@@ -10,7 +10,7 @@ defmodule PortMidi.Nifs.Input do
   def do_poll(_stream), do:
     raise "NIF library not loaded"
 
-  def do_read(_stream), do:
+  def do_read(_stream, _buffer_size), do:
     raise "NIF library not loaded"
 
   def do_open(_device_name), do:
