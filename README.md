@@ -19,6 +19,16 @@ def application do
 end
 ```
 
+## Configuration
+
+If needed, the input buffer size can be set, in your `config.exs`:
+
+```
+  config :portmidi, buffer_size: 1024
+```
+
+By default, this value is 256.
+
 ## Usage
 
 To send MIDI events to a MIDI device:
@@ -29,7 +39,16 @@ iex(1)> {:ok, output} = PortMidi.open(:output, "Launchpad Mini")
 iex(2)> PortMidi.write(output, {176, 0, 127})
 :ok
 
-iex(3)> PortMidi.close(:output, output)
+iex(3)> PortMidi.write(output, {{176, 0, 127}, 123}) # with timestamp
+:ok
+
+iex(4)> PortMidi.write(output, [
+iex(5)>   {{176, 0, 127}, 123},
+iex(6)>   {{178, 0, 127}, 128}
+iex(7)> ]) # as a sequence of events (more efficient)
+:ok
+
+iex(8)> PortMidi.close(:output, output)
 :ok
 ```
 
