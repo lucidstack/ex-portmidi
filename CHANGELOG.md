@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.0
+* `@ 147f569` - `PortMidi.Reader` now passes a `buffer_size` to the underlying nif, saving MIDI messages from being lost. This `buffer_size` is set to 256 by default, and can be configured at application level: `config :portmidi, buffer_size: 1024`
+* `@ ed9e3bb` - `PortMidi.Reader` now emits messages as lists, no more as simple tuples. Sometimes there could be only one message, but a list is always returned. The tuples have also changed structure, to include timestamps, that were previously ignored: `[{{status, note1, note2}, timestamp}, ...]`
+* `@ d202f7a` - `PortMidi.Writer` now accepts good old message tuples (`{status, note1, note2}`), event tuples, with timestamp (`{{status, note1, note2}, timestamp}`) or lists of event tuples (`[{{status, note1, note2}, timestamp}, ...]`). This is the preferred way for high throughput, and can be safely used as a pipe from an input device.
+
 ## 4.1.0
 * `@ 614a27e` - Opening inputs and outputs now return `{:error, reason}` if Portmidi can't open the given device. Previously, the Portmidid NIFs would just throw a bad argument error, without context. `reason` is an atom representing an error from the C library. Have a look at `src/portmidi_shared.c#makePmErrorAtom` for all possible errors.
 
