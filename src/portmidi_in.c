@@ -63,7 +63,7 @@ static ERL_NIF_TERM do_poll(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 
 static ERL_NIF_TERM do_read(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) {
   PmEvent buffer[MAXBUFLEN];
-  int status, data1, data2;
+  int status, data1, data2, timestamp;
   static PortMidiStream ** stream;
 
   ErlNifResourceType* streamType = (ErlNifResourceType*)enif_priv_data(env);
@@ -71,14 +71,23 @@ static ERL_NIF_TERM do_read(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) 
     return enif_make_badarg(env);
   }
 
-  int numEvents = Pm_Read(*stream, buffer, 1);
-  status = enif_make_int(env, Pm_MessageStatus(buffer[0].message));
-  data1  = enif_make_int(env, Pm_MessageData1(buffer[0].message));
-  data2  = enif_make_int(env, Pm_MessageData2(buffer[0].message));
   int bufferSize = enif_make_int(env, argv[2]);
   int numEvents = Pm_Read(*stream, buffer, bufferSize);
 
-  return enif_make_tuple3(env, status, data1, data2);
+  ERL_NIF_TERM events[numEvents];
+  for(int i = 0; i < numEvents; i++) {
+    status    = enif_make_int(env, Pm_MessageStatus(buffer[i].message));
+    data1     = enif_make_int(env, Pm_MessageData1(buffer[i].message));
+    data2     = enif_make_int(env, Pm_MessageData2(buffer[i].message));
+    timestamp = enif_make_long(env, buffer[i].timestamp);
+    events[i] = enif_make_tuple2(
+      env,
+      enif_make_tuple3(env, status, data1, data2),
+      timestamp
+    );
+  }
+
+  return enif_make_list_from_array(env, events, numEvents);
 }
 
 static ERL_NIF_TERM do_close(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) {
