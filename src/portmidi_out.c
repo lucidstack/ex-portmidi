@@ -49,26 +49,38 @@ static ERL_NIF_TERM do_write(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]
     return enif_make_badarg(env);
   }
 
-  int numOfErlValues;
-  ERL_NIF_TERM erlMessage = argv[1];
-  const ERL_NIF_TERM * erlValues;
-  enif_get_tuple(env, erlMessage, &numOfErlValues, &erlValues);
+  ERL_NIF_TERM erlMessages = argv[1];
+  const ERL_NIF_TERM * erlEvent;
+  const ERL_NIF_TERM * erlMessage;
+  ERL_NIF_TERM erlTuple;
 
-  long int status, note, velocity, timestamp = 0;
-  enif_get_long(env, erlValues[0], &status);
-  enif_get_long(env, erlValues[1], &note);
-  enif_get_long(env, erlValues[2], &velocity);
+  unsigned int numOfMessages;
+  int tupleSize;
+  enif_get_list_length(env, erlMessages, &numOfMessages);
 
-  if(argv[2]) {
-    enif_get_long(env, argv[2], &timestamp);
+  PmEvent events[numOfMessages];
+  long int status, note, velocity, timestamp;
+
+  for(int i = 0; i < numOfMessages; i++) {
+    enif_get_list_cell(env, erlMessages, &erlTuple, &erlMessages);
+    enif_get_tuple(env, erlTuple, &tupleSize, &erlEvent);
+
+    enif_get_tuple(env, erlEvent[0], &tupleSize, &erlMessage);
+    enif_get_long(env, erlMessage[0], &status);
+    enif_get_long(env, erlMessage[1], &note);
+    enif_get_long(env, erlMessage[2], &velocity);
+
+    enif_get_long(env, erlEvent[1], &timestamp);
+
+    PmEvent event;
+    event.message = Pm_Message(status, note, velocity);
+    event.timestamp = timestamp;
+
+    events[i] = event;
   }
 
-  PmEvent event;
-  event.message = Pm_Message(status, note, velocity);
-  event.timestamp = timestamp;
-
   PmError writeError;
-  writeError = Pm_Write(*stream, &event, 1);
+  writeError = Pm_Write(*stream, events, numOfMessages);
 
   if (writeError == pmNoError) {
     return enif_make_atom(env, "ok");
@@ -98,8 +110,8 @@ static ERL_NIF_TERM do_close(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[])
 }
 
 static ErlNifFunc nif_funcs[] = {
-  {"do_open", 1, do_open},
-  {"do_write", 3, do_write},
+  {"do_open",  1, do_open},
+  {"do_write", 2, do_write},
   {"do_close", 1, do_close}
 };
 

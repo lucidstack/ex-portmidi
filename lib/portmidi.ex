@@ -63,21 +63,18 @@ defmodule PortMidi do
     Input.listen(input, pid)
 
   @doc """
-    Writes a MIDI event to the given `output` device. `message` must be a tuple
-    `{status, note, velocity}`. Returns `:ok` on write.
+    Writes a MIDI event to the given `output` device. `message` can be a tuple
+    `{status, note, velocity}`, a tuple `{{status, note, velocity}, timestamp}`
+    or a list `[{{status, note, velocity}, timestamp}, ...]`. Returns `:ok` on write.
   """
-  @spec write(pid(), {byte(), byte(), byte()}) :: :ok
+  @type message :: {byte(), byte(), byte()}
+  @type timestamp :: byte()
+
+  @spec write(pid(), message) :: :ok
+  @spec write(pid(), {message, timestamp}) :: :ok
+  @spec write(pid(), [{message, timestamp}, ...]) :: :ok
   def write(output, message), do:
     Output.write(output, message)
-
-  @doc """
-    Writes a MIDI event to the given `output` device, with given `timestamp`.
-    `message` must be a tuple `{status, note, velocity}`. Returns `:ok` on
-    write.
-  """
-  @spec write(pid(), {byte(), byte(), byte()}, non_neg_integer()) :: :ok
-  def write(output, message, timestamp), do:
-    Output.write(output, message, timestamp)
 
   @doc """
     Returns a map with input and output devices, in the form of
