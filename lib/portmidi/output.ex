@@ -5,24 +5,18 @@ defmodule PortMidi.Output do
     GenServer.start_link(__MODULE__, device_name)
   end
 
+
   # Client implementation
   #######################
-
-  @default_timestamp 0
-  def write(server, message, timestamp \\ @default_timestamp)
-
-  def write(_, message, _) when length(message) != 3, do:
-    raise "message must be [status, note, velocity]"
-
-  def write(server, message, timestamp), do:
-    GenServer.call(server, {:write, message, timestamp})
+  def write(server, message), do:
+    GenServer.call(server, {:write, message})
 
   def stop(server), do:
     GenServer.stop(server)
 
+
   # Server implementation
   #######################
-
   def init(device_name) do
     Process.flag(:trap_exit, true)
 
@@ -32,12 +26,23 @@ defmodule PortMidi.Output do
     end
   end
 
-  def handle_call({:write, message, timestamp}, _from, stream) do
-    response = do_write(stream, message, timestamp)
+  def handle_call({:write, messages}, _from, stream) when is_list(messages) do
+    response = do_write(stream, messages)
     {:reply, response, stream}
   end
 
-  def terminate(_reason, stream), do:
-    stream |> do_close
+  @default_timestamp 0
+  def handle_call({:write, {_, _, _} = message}, _from, stream) do
+    response = do_write(stream, [{message, @default_timestamp}])
+    {:reply, response, stream}
+  end
 
+  def handle_call({:write, message}, _from, stream) do
+    response = do_write(stream, [message])
+    {:reply, response, stream}
+  end
+
+  def terminate(_reason, stream) do
+    stream |> do_close
+  end
 end

@@ -11,7 +11,7 @@ defmodule PortMidi.Nifs.Output do
   def do_open(_device_name), do:
     raise "NIF library not loaded"
 
-  def do_write(_stream, _message, _timestamp), do:
+  def do_write(_stream, _message), do:
     raise "NIF library not loaded"
 
   def do_close(_stream), do:
