@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.1
+
+* `@ 8f7c308` - Add `-std=c99` and remove unneded flags for NIFs compilation in Makefile
+
 ## 5.0.0
 * `@ 147f569` - `PortMidi.Reader` now passes a `buffer_size` to the underlying nif, saving MIDI messages from being lost. This `buffer_size` is set to 256 by default, and can be configured at application level: `config :portmidi, buffer_size: 1024`
 * `@ ed9e3bb` - `PortMidi.Reader` now emits messages as lists, no more as simple tuples. Sometimes there could be only one message, but a list is always returned. The tuples have also changed structure, to include timestamps, that were previously ignored: `[{{status, note1, note2}, timestamp}, ...]`
