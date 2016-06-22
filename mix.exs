@@ -1,6 +1,6 @@
 defmodule PortMidi.Mixfile do
   use Mix.Project
-  @version "5.0.0"
+  @version "5.0.1"
 
   def project do
     [app: :portmidi,
