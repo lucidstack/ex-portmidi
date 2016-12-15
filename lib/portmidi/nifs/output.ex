@@ -8,7 +8,7 @@ defmodule PortMidi.Nifs.Output do
     |> :erlang.load_nif(0)
   end
 
-  def do_open(_device_name), do:
+  def do_open(_device_name, _latency), do:
     raise "NIF library not loaded"
 
   def do_write(_stream, _message), do:
