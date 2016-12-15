@@ -8,7 +8,7 @@
 
 typedef enum {INPUT, OUTPUT} DeviceType;
 
-PmError findDevice(PmStream **stream, char *deviceName, DeviceType type);
+PmError findDevice(PmStream **stream, char *deviceName, DeviceType type, long latency);
 char* makePmErrorAtom(PmError);
 const PmDeviceInfo ** listDevices(int);
 void debug(char *str);
@@ -22,6 +22,7 @@ int load(ErlNifEnv* env, void** priv_data, ERL_NIF_TERM load_info) {
 
 static ERL_NIF_TERM do_open(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]) {
   char deviceName[MAXBUFLEN];
+  long latency;
   ERL_NIF_TERM streamTerm;
   PortMidiStream **streamAlloc;
   PmError result;
@@ -30,7 +31,9 @@ static ERL_NIF_TERM do_open(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
   streamAlloc = (PortMidiStream**)enif_alloc_resource(streamType, sizeof(PortMidiStream*));
 
   enif_get_string(env, argv[0], deviceName, MAXBUFLEN, ERL_NIF_LATIN1);
-  if((result = findDevice(streamAlloc, deviceName, OUTPUT)) != pmNoError) {
+  enif_get_long(env, argv[1], &latency);
+
+  if((result = findDevice(streamAlloc, deviceName, OUTPUT, latency)) != pmNoError) {
     ERL_NIF_TERM reason = enif_make_atom(env, makePmErrorAtom(result));
     return enif_make_tuple2(env, enif_make_atom(env, "error"), reason);
   }
@@ -110,7 +113,7 @@ static ERL_NIF_TERM do_close(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[])
 }
 
 static ErlNifFunc nif_funcs[] = {
-  {"do_open",  1, do_open},
+  {"do_open",  2, do_open},
   {"do_write", 2, do_write},
   {"do_close", 1, do_close}
 };

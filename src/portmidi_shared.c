@@ -8,11 +8,11 @@
 typedef enum {INPUT, OUTPUT} DeviceType;
 
 char* makePmErrorAtom(PmError errnum);
-PmError findDevice(PortMidiStream **stream, char *deviceName, DeviceType type);
+PmError findDevice(PortMidiStream **stream, char *deviceName, DeviceType type, long latency);
 const PmDeviceInfo ** listDevices(int);
 void debug(char *str);
 
-PmError findDevice(PortMidiStream **stream, char *deviceName, DeviceType type) {
+PmError findDevice(PortMidiStream **stream, char *deviceName, DeviceType type, long latency) {
   PmError result = pmInvalidDeviceId;
   const PmDeviceInfo *deviceInfo;
 
@@ -26,7 +26,7 @@ PmError findDevice(PortMidiStream **stream, char *deviceName, DeviceType type) {
         break;
       }
       if(type == OUTPUT && deviceInfo->output == 1) {
-        result = Pm_OpenOutput(stream, i, NULL, 0, NULL, NULL, 0);
+        result = Pm_OpenOutput(stream, i, NULL, 0, NULL, NULL, latency);
         break;
       }
     }
