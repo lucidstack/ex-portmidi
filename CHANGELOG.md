@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.1.0
+
+* `@ 1cf967b` - Add an optional `latency` argument to `PortMidi.open/2,3`. When opening an output device, a `latency` value greater than `0` has to be set, if you need to use timestamps; otherwise, these will be ignored. Kudos to [@thbar](https://github.com/thbar) for spotting this issue! 👏
+
 ## 5.0.1
 
 * `@ 8f7c308` - Add `-std=c99` and remove unneded flags for NIFs compilation in Makefile
