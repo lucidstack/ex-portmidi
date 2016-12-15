@@ -1,8 +1,8 @@
 defmodule PortMidi.Output do
   import PortMidi.Nifs.Output
 
-  def start_link(device_name) do
-    GenServer.start_link(__MODULE__, device_name)
+  def start_link(device_name, latency) do
+    GenServer.start_link(__MODULE__, {device_name, latency})
   end
 
 
@@ -17,10 +17,10 @@ defmodule PortMidi.Output do
 
   # Server implementation
   #######################
-  def init(device_name) do
+  def init({device_name, latency}) do
     Process.flag(:trap_exit, true)
 
-    case device_name |> String.to_char_list |> do_open do
+    case do_open(to_charlist(device_name), latency) do
       {:ok,    stream} -> {:ok,   stream}
       {:error, reason} -> {:stop, reason}
     end
