@@ -28,19 +28,32 @@ defmodule PortMidi do
   end
 
   @doc """
-    Opens a connection to the device with name `device_name` of type
-    `device_type`.
+    Opens a connection to the input device with name `device_name`.
 
     Returns the `pid` to the corresponding GenServer. Use this `pid` to call
-    `listen/2`, if the device is an input, or `write/2` if it is an output.
+    `listen/2`.
 
     If Portmidi can't open the device, a tuple `{:error, reason}` is returned.
     Check `src/portmidi_shared.c#makePmErrorAtom` for all possible errors.
   """
-  @spec open(atom, <<>>) :: {:ok, pid()} | {:error, atom()}
-  def open(device_type, device_name)
-  def open(:input, device_name),  do: Input.start_link device_name
-  def open(:output, device_name), do: Output.start_link device_name
+  @spec open(:input, <<>>) :: {:ok, pid()} | {:error, atom()}
+  def open(:input, device_name) do
+    Input.start_link device_name
+  end
+
+  @doc """
+    Opens a connection to the output device with name `device_name`.
+
+    Returns the `pid` to the corresponding GenServer. Use this `pid` to call
+    `write/2`.
+
+    If Portmidi can't open the device, a tuple `{:error, reason}` is returned.
+    Check `src/portmidi_shared.c#makePmErrorAtom` for all possible errors.
+  """
+  @spec open(:output, <<>>, non_neg_integer()) :: {:ok, pid()} | {:error, atom()}
+  def open(:output, device_name, latency \\ 0) do
+    Output.start_link(device_name, latency)
+  end
 
   @doc """
     Terminates the GenServer held by the `device` argument, and closes the
