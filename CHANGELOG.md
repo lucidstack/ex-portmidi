@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.1.1
+
+* `@ ea79492` - replace NULL with 0 when calling findDevice in C code
+
 ## 5.1.0
 
 * `@ 1cf967b` - Add an optional `latency` argument to `PortMidi.open/2,3`. When opening an output device, a `latency` value greater than `0` has to be set, if you need to use timestamps; otherwise, these will be ignored. Kudos to [@thbar](https://github.com/thbar) for spotting this issue! 👏
