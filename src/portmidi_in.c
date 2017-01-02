@@ -31,7 +31,7 @@ static ERL_NIF_TERM do_open(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
   streamAlloc = (PortMidiStream**)enif_alloc_resource(streamType, sizeof(PortMidiStream*));
 
   enif_get_string(env, argv[0], deviceName, MAXBUFLEN, ERL_NIF_LATIN1);
-  if((result = findDevice(streamAlloc, deviceName, INPUT, NULL)) != pmNoError) {
+  if((result = findDevice(streamAlloc, deviceName, INPUT, 0)) != pmNoError) {
     ERL_NIF_TERM reason = enif_make_atom(env, makePmErrorAtom(result));
     return enif_make_tuple2(env, enif_make_atom(env, "error"), reason);
   }

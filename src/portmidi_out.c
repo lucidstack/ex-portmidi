@@ -64,7 +64,7 @@ static ERL_NIF_TERM do_write(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]
   PmEvent events[numOfMessages];
   long int status, note, velocity, timestamp;
 
-  for(int i = 0; i < numOfMessages; i++) {
+  for(unsigned int i = 0; i < numOfMessages; i++) {
     enif_get_list_cell(env, erlMessages, &erlTuple, &erlMessages);
     enif_get_tuple(env, erlTuple, &tupleSize, &erlEvent);
 
