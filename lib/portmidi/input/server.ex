@@ -21,7 +21,7 @@ defmodule PortMidi.Input.Server do
   def init(device_name) do
     Process.flag(:trap_exit, true)
 
-    case Reader.start_link(self, device_name) do
+    case Reader.start_link(self(), device_name) do
       {:ok, reader} ->
         Reader.listen(reader)
         {:ok, reader}
@@ -31,9 +31,9 @@ defmodule PortMidi.Input.Server do
   end
 
   def handle_cast({:new_messages, messages}, reader) do
-    self
+    self()
     |> Listeners.list
-    |> Enum.each(&(send(&1, {self, messages})))
+    |> Enum.each(&(send(&1, {self(), messages})))
 
     {:noreply, reader}
   end

@@ -7,11 +7,11 @@ defmodule PortMidi.Mixfile do
      version: @version,
      elixir: "~> 1.2",
      description: "Elixir bindings to the portmidi C library",
-     package: package,
+     package: package(),
      compilers: [:port_midi, :elixir, :app],
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps,
+     deps: deps(),
 
      # Docs
      name: "PortMidi",
@@ -41,10 +41,12 @@ defmodule PortMidi.Mixfile do
 end
 
 defmodule Mix.Tasks.Compile.PortMidi do
-  @shortdoc "Compiles portmidi bindings"
+  @moduledoc "Compiles portmidi bindings"
   def run(_) do
     if Mix.shell.cmd("make") != 0 do
       raise Mix.Error, message: "could not run `make`. Do you have make, gcc and libportmidi installed?"
     end
+
+    :ok
   end
 end

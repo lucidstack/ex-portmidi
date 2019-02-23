@@ -3,7 +3,7 @@ defmodule PortMidi.Devices do
   alias  PortMidi.Device
 
   def list do
-    do_list
+    do_list()
     |> Map.update(:input,  [], &do_build_devices/1)
     |> Map.update(:output, [], &do_build_devices/1)
   end

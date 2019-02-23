@@ -5,7 +5,7 @@ defmodule PortMidi.Device do
     map
     |> Map.update(:name, nil, &to_string/1)
     |> Map.update(:interf, nil, &to_string/1)
-    |> make_struct
+    |> make_struct()
   end
 
   defp make_struct(map), do:
