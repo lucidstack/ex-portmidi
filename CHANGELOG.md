@@ -1,8 +1,12 @@
 # Changelog
 
+## 5.1.2
+
+* `@ 6f2b0aa` - Fix Elixir 1.7 warnings
+
 ## 5.1.1
 
-* `@ ea79492` - replace NULL with 0 when calling findDevice in C code
+* `@ ea79492` - Replace NULL with 0 when calling findDevice in C code
 
 ## 5.1.0
 
