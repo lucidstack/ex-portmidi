@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define MAXBUFLEN 1024
 
@@ -53,6 +54,8 @@ static ERL_NIF_TERM do_poll(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
   if(!enif_get_resource(env, argv[0], streamType, (PortMidiStream **) &stream)) {
     return enif_make_badarg(env);
   }
+
+  usleep(10);
 
   if(Pm_Poll(*stream)) {
     return enif_make_atom(env, "read");
