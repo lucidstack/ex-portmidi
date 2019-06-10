@@ -61,19 +61,22 @@ static ERL_NIF_TERM do_poll(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
   }
 }
 
+
 static ERL_NIF_TERM do_read(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) {
   PmEvent buffer[MAXBUFLEN];
   int status, data1, data2, timestamp;
   static PortMidiStream ** stream;
-
   ErlNifResourceType* streamType = (ErlNifResourceType*)enif_priv_data(env);
   if(!enif_get_resource(env, argv[0], streamType, (PortMidiStream **) &stream)) {
     return enif_make_badarg(env);
   }
-
-  int bufferSize = enif_make_int(env, argv[2]);
+  long bufferSize;
+  enif_get_long(env, argv[1], &bufferSize);
   int numEvents = Pm_Read(*stream, buffer, bufferSize);
-
+  if (numEvents < 0) {
+      ERL_NIF_TERM reason = enif_make_atom(env, makePmErrorAtom(numEvents));
+      return enif_make_tuple2(env, enif_make_atom(env, "error"), reason);
+  }
   ERL_NIF_TERM events[numEvents];
   for(int i = 0; i < numEvents; i++) {
     status    = enif_make_int(env, Pm_MessageStatus(buffer[i].message));

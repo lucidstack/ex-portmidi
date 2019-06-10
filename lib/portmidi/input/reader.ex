@@ -1,6 +1,7 @@
 defmodule PortMidi.Input.Reader do
   import PortMidi.Nifs.Input
   alias PortMidi.Input.Server
+  require Logger
 
   @buffer_size Application.get_env(:portmidi, :buffer_size, 256)
 
@@ -39,8 +40,11 @@ defmodule PortMidi.Input.Reader do
   end
 
   defp read_and_send(server, stream) do
-    messages = do_read(stream, @buffer_size)
-    Server.new_messages(server, messages)
+
+    case do_read(stream, @buffer_size) do
+      {:error, reason} -> Logger.debug("Error Reading Midi: #{reason}")
+      messages -> Server.new_messages(server, messages)
+    end
   end
 
   defp do_stop({_server, stream, task}) do
