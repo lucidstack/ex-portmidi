@@ -61,11 +61,11 @@ static ERL_NIF_TERM do_poll(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
   }
 }
 
-
 static ERL_NIF_TERM do_read(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) {
   PmEvent buffer[MAXBUFLEN];
   int status, data1, data2, timestamp;
   static PortMidiStream ** stream;
+
   ErlNifResourceType* streamType = (ErlNifResourceType*)enif_priv_data(env);
   if(!enif_get_resource(env, argv[0], streamType, (PortMidiStream **) &stream)) {
     return enif_make_badarg(env);
@@ -89,7 +89,6 @@ static ERL_NIF_TERM do_read(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[]) 
       timestamp
     );
   }
-
   return enif_make_list_from_array(env, events, numEvents);
 }
 
@@ -100,9 +99,7 @@ static ERL_NIF_TERM do_close(ErlNifEnv* env, int arc, const ERL_NIF_TERM argv[])
   if(!enif_get_resource(env, argv[0], streamType, (PortMidiStream **) &stream)) {
     return enif_make_badarg(env);
   }
-
   Pm_Close(*stream);
-
   return enif_make_atom(env, "ok");
 }
 
