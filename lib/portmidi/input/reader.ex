@@ -40,7 +40,7 @@ defmodule PortMidi.Input.Reader do
 
   defp read_and_send(server, stream) do
     messages = do_read(stream, @buffer_size)
-    Server.new_messages(server, messages)
+    if messages != [], do: Server.new_messages(server, messages)
   end
 
   defp do_stop({_server, stream, task}) do
