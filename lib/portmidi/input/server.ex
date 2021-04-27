@@ -9,11 +9,9 @@ defmodule PortMidi.Input.Server do
   # Client implementation
   #######################
 
-  def new_messages(server, messages), do:
-    GenServer.cast(server, {:new_messages, messages})
+  def new_messages(server, messages), do: GenServer.cast(server, {:new_messages, messages})
 
-  def stop(server), do:
-    GenServer.stop(server)
+  def stop(server), do: GenServer.stop(server)
 
   # Server implementation
   #######################
@@ -25,6 +23,7 @@ defmodule PortMidi.Input.Server do
       {:ok, reader} ->
         Reader.listen(reader)
         {:ok, reader}
+
       {:error, reason} ->
         {:stop, reason}
     end
@@ -32,13 +31,11 @@ defmodule PortMidi.Input.Server do
 
   def handle_cast({:new_messages, messages}, reader) do
     self()
-    |> Listeners.list
-    |> Enum.each(&(send(&1, {self(), messages})))
+    |> Listeners.list()
+    |> Enum.each(&send(&1, {self(), messages}))
 
     {:noreply, reader}
   end
 
-  def terminate(_reason, reader), do:
-    reader |> Reader.stop
-
+  def terminate(_reason, reader), do: reader |> Reader.stop()
 end
