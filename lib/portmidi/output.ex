@@ -5,15 +5,11 @@ defmodule PortMidi.Output do
     GenServer.start_link(__MODULE__, {device_name, latency})
   end
 
-
   # Client implementation
   #######################
-  def write(server, message), do:
-    GenServer.call(server, {:write, message})
+  def write(server, message), do: GenServer.call(server, {:write, message})
 
-  def stop(server), do:
-    GenServer.stop(server)
-
+  def stop(server), do: GenServer.stop(server)
 
   # Server implementation
   #######################
@@ -21,7 +17,7 @@ defmodule PortMidi.Output do
     Process.flag(:trap_exit, true)
 
     case do_open(to_charlist(device_name), latency) do
-      {:ok,    stream} -> {:ok,   stream}
+      {:ok, stream} -> {:ok, stream}
       {:error, reason} -> {:stop, reason}
     end
   end

@@ -3,7 +3,7 @@ defmodule PortMidi.Input do
   alias PortMidi.Listeners
 
   def start_link(device_name) do
-    Server.start_link device_name
+    Server.start_link(device_name)
   end
 
   def listen(input, pid) do
@@ -14,4 +14,3 @@ defmodule PortMidi.Input do
     Server.stop(input)
   end
 end
-

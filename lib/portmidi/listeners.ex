@@ -6,17 +6,14 @@ defmodule PortMidi.Listeners do
   # Client implementation
   #######################
 
-  def register(input, pid), do:
-    GenServer.cast(__MODULE__, {:register, input, pid})
+  def register(input, pid), do: GenServer.cast(__MODULE__, {:register, input, pid})
 
-  def list(input), do:
-    GenServer.call(__MODULE__, {:list, input})
+  def list(input), do: GenServer.call(__MODULE__, {:list, input})
 
   # Server implementation
   #######################
 
-  def init(:ok), do:
-    {:ok, {%{}, %{}}}
+  def init(:ok), do: {:ok, {%{}, %{}}}
 
   def handle_call({:list, input}, _from, {listeners, _} = state) do
     if Map.has_key?(listeners, input) do
@@ -43,19 +40,17 @@ defmodule PortMidi.Listeners do
     {:noreply, {listeners, refs}}
   end
 
-  def handle_info(_msg, state), do:
-    {:noreply, state}
+  def handle_info(_msg, state), do: {:noreply, state}
 
   require Logger
-  def terminate(reason, _), do:
-    Logger.error(reason)
+  def terminate(reason, _), do: Logger.error(reason)
 
   # Private implementation
   ########################
 
   def do_update_listeners(listeners, pid) do
-    Enum.reduce(listeners, %{}, fn({input, listeners}, acc) ->
-      Map.put acc, input, do_find_new_listeners(listeners, pid)
+    Enum.reduce(listeners, %{}, fn {input, listeners}, acc ->
+      Map.put(acc, input, do_find_new_listeners(listeners, pid))
     end)
   end
 
